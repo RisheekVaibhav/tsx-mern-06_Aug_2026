@@ -45,7 +45,12 @@ export function useCharacterSearch(page: number, searchTerm: string, speciesFilt
 
   const availableSpeciesIds = useMemo(() => {
     const ids = new Set(allCharacters.map(getSpeciesId));
-    return Array.from(ids).sort();
+    return Array.from(ids).sort((left, right) => {
+      if (left === "none") return 1;
+      if (right === "none") return -1;
+
+      return Number(left) - Number(right);
+    });
   }, [allCharacters]);
 
   const filteredCharacters = useMemo(() => {
