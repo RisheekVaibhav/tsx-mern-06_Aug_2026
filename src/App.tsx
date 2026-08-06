@@ -4,16 +4,11 @@ import { CharacterCard } from "./components/CharacterCard";
 import { CharacterModal } from "./components/CharacterModal";
 import type { Character } from "./types/character";
 
-function getImageUrlForCharacter(character: Character): string {
-  const idMatch = character.url.match(/\/people\/(\d+)/);
-  const id = idMatch ? idMatch[1] : character.name;
-  return `https://picsum.photos/seed/${id}/400/300`;
-}
-
 function App() {
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [speciesFilter, setSpeciesFilter] = useState("all");
+  const [imageSeedSalt] = useState(() => Math.random().toString(36).slice(2));
 
   const {
     characters,
@@ -36,6 +31,11 @@ function App() {
   function handleSpeciesFilterChange(value: string) {
     setSpeciesFilter(value);
     setPage(1);
+  }
+
+  function getImageUrlForCharacter(character: Character): string {
+    const imageSeed = `${imageSeedSalt}-${character.url}`;
+    return `https://picsum.photos/400/300?random=${encodeURIComponent(imageSeed)}`;
   }
 
   return (

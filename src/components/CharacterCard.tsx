@@ -1,5 +1,6 @@
 import type { Character } from "../types/character";
 import { getSpeciesColor } from "../utils/speciesColor";
+import { useState } from "react";
 
 interface CharacterCardProps {
   character: Character;
@@ -9,6 +10,7 @@ interface CharacterCardProps {
 
 export function CharacterCard({ character, imageUrl, onClick }: CharacterCardProps) {
   const colorClasses = getSpeciesColor(character.species);
+  const [currentImageUrl, setCurrentImageUrl] = useState(imageUrl);
 
   return (
     <div
@@ -22,8 +24,9 @@ export function CharacterCard({ character, imageUrl, onClick }: CharacterCardPro
       `}
     >
       <img
-        src={imageUrl}
+        src={currentImageUrl}
         alt={character.name}
+        onError={() => setCurrentImageUrl("https://picsum.photos/400/300?grayscale")}
         className="w-full h-48 object-cover rounded-lg mb-3"
       />
       <h2 className="text-lg font-semibold text-gray-800">{character.name}</h2>
