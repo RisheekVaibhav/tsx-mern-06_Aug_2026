@@ -8,7 +8,7 @@ function App() {
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [speciesFilter, setSpeciesFilter] = useState("all");
-  const [imageSeedSalt] = useState(() => Math.random().toString(36).slice(2));
+  const [imageSeedSalt] = useState(() => Math.floor(Math.random() * 1_000_000));
 
   const {
     characters,
@@ -33,9 +33,17 @@ function App() {
     setPage(1);
   }
 
+  function hashString(value: string): number {
+    let hash = 0;
+    for (let i = 0; i < value.length; i += 1) {
+      hash = (hash * 31 + value.charCodeAt(i)) >>> 0;
+    }
+    return hash;
+  }
+
   function getImageUrlForCharacter(character: Character): string {
-    const imageSeed = `${imageSeedSalt}-${character.url}`;
-    return `https://picsum.photos/400/300?random=${encodeURIComponent(imageSeed)}`;
+    const lock = hashString(`${character.url}-${imageSeedSalt}`);
+    return `https://loremflickr.com/400/300/starwars?lock=${lock}`;
   }
 
   return (
